@@ -52,15 +52,15 @@ public class IMUT_ImmutableList  implements Iterable<Object> {
     	return new IMUT_ImmutableList(cloneList);
     }
 
-    public IMUT_ImmutableList addAll(List<Object> valueList) {
+    public IMUT_ImmutableList addAll(List<Object> objectList) {
     	List<Object> cloneList = this.rawClone();
-    	cloneList.addAll(valueList);
+    	cloneList.addAll(objectList);
     	return new IMUT_ImmutableList(cloneList);
     }
 
-    public IMUT_ImmutableList addAll(Set<Object> valueSet) {
+    public IMUT_ImmutableList addAll(Set<Object> objectSet) {
     	List<Object> cloneList = this.rawClone();
-    	cloneList.addAll(valueSet);
+    	cloneList.addAll(objectSet);
     	return new IMUT_ImmutableList(cloneList);
     }
     
@@ -74,8 +74,8 @@ public class IMUT_ImmutableList  implements Iterable<Object> {
     	return this.seedList.contains(value);
     }
 
-    public Boolean equals(List<Object> valueList) {
-    	return this.seedList.equals(valueList);
+    public Boolean equals(List<Object> thatList) {
+    	return this.seedList.equals(thatList);
     }
 
     public Object get(Integer index) {
