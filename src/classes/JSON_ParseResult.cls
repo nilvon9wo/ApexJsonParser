@@ -38,7 +38,7 @@ public class JSON_ParseResult {
     private OPT_Option createOptionFor(String remainder) {
     	return (String.isBlank(remainder))
     		? new OPT_None()
-    		: OPT_Option.option(remainder);
+    		: OPT_Option.option(remainder.trim());
     }
     
     public JSON_ParsePopResult popRemainder() {
