@@ -115,7 +115,6 @@ public class TEST_DummyUserFactory {
 	}
 
 	// Randomizer -----------------------------------------------------------------------------------------------------
-	// This is INTENTIONAL duplicate code from UTIL_Randomizer in order for tests not to rely on code which it might be testing.
 	    
     // @see: // @see: http://www.codebycody.com/2012/02/sfdc-randomizer.html
 	private static final String CHARACTERS = 'abcdefghijklmnopqrstuvwxyz0123456789';
