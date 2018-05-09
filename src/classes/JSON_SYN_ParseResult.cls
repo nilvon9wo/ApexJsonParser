@@ -6,18 +6,19 @@ public class JSON_SYN_ParseResult {
     	this.valueMap = valueMap; 
     	this.remainder = remainder;
     }   
-    
-    public JSON_SYN_ParseResult(IMUT_ImmutableList remainder) {
-    	this.valueMap = this.createMapFor(null);
-    	this.remainder = remainder;
-    }    
-    
-    @testVisible 
-    private IMUT_ImmutableList createMapFor(Map<String, Object> value) {
-    	return new IMUT_ImmutableMap(
-    		(value == null)
-	    		? new Map<Object, Object>{}
-	    		: value
+
+     public JSON_SYN_ParseResult(Map<String, Object> mapValueByToken, IMUT_ImmutableList remainder, UTIL_MapHelper mapHelper) {
+    	this(
+    		new IMUT_ImmutableMap(mapHelper.convertToObjectByObjectMap(mapValueByToken)), 
+    		remainder
     	);
+    }   
+    
+     public JSON_SYN_ParseResult(Map<String, Object> mapValueByToken, IMUT_ImmutableList remainder) {
+    	this(mapValueByToken, remainder, new UTIL_MapHelper());
+    }   
+
+    public JSON_SYN_ParseResult(IMUT_ImmutableList remainder) {
+    	this(new IMUT_ImmutableMap(new Map<Object, Object>()), remainder);
     }    
 }
