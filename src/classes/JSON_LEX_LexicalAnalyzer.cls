@@ -1,9 +1,9 @@
 // See: http://notes.eatonphil.com/writing-a-simple-json-parser.html
 public virtual class JSON_LEX_LexicalAnalyzer { 
-	List<JSON_LEX_ParserIntf> ParserList; 
+	List<JSON_LEX_ParserIntf> parserList; 
 	
-	public JSON_LEX_LexicalAnalyzer(List<JSON_LEX_ParserIntf> ParserList) {
-		this.ParserList = ParserList;
+	public JSON_LEX_LexicalAnalyzer(List<JSON_LEX_ParserIntf> parserList) {
+		this.parserList = parserList;
 	}
  
 	public JSON_LEX_LexicalAnalyzer() {
@@ -30,7 +30,7 @@ public virtual class JSON_LEX_LexicalAnalyzer {
 	}
 
 	public JSON_LEX_ParseResult match(JSON_LEX_ParseResult parseResult, String remainder) {
-		for (JSON_LEX_ParserIntf Parser : this.ParserList) {
+		for (JSON_LEX_ParserIntf Parser : this.parserList) {
 			JSON_LEX_ParseResult result = Parser.parseFor(remainder);
 			if (!result.tokenList.isEmpty()) {
 				return new JSON_LEX_ParseResult(

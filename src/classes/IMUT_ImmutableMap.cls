@@ -1,21 +1,22 @@
 public class IMUT_ImmutableMap {
-    private Map<Object, Object> seedMap;
+    Map<Object, Object> seedMap;
+	UTIL_MapHelper mapHelper;
+
+    public IMUT_ImmutableMap(Map<Object, Object> seedMap, UTIL_MapHelper mapHelper) {
+    	this.seedMap = seedMap;
+    	this.mapHelper = mapHelper;
+    }
+
+    public IMUT_ImmutableMap(Map<String, SObject> seedMap, UTIL_MapHelper mapHelper) {
+    	this(mapHelper.convertToObjectByObjectMap(seedMap), mapHelper);
+    }
     
     public IMUT_ImmutableMap(Map<Object, Object> seedMap) {
-    	this.seedMap = seedMap;
+    	this(seedMap, new UTIL_MapHelper());
     }
 
     public IMUT_ImmutableMap(Map<String, SObject> seedMap) {
-    	this.seedMap = this.convert(seedMap);
-    }
-    
-    @testVisible
-    private Map<Object, Object> convert(Map<String, SObject> seedMap) {
-    	Map<Object, Object> objectMap = new Map<Object, Object>();
-		for (String key : seedMap.keySet()) {
-			objectMap.put(key, seedMap.get(key));
-		}
-    	return objectMap;
+    	this(seedMap, new UTIL_MapHelper());
     }
 
     public IMUT_ImmutableMap perfectClone() {
@@ -118,14 +119,12 @@ public class IMUT_ImmutableMap {
 	@testVisible
 	private Map<String, SObject> createSObjectByStringMap() {
     	Map<Object, Object> cloneMap = this.rawClone();
-		Map<String, SObject> sObjectByStringMap = new Map<String, SObject>(); 
-		for (Object key : cloneMap.keySet()) {
-			try {
-				sObjectByStringMap.put((String) key, (SObject) cloneMap.get(key));
-			}
-			catch (System.TypeException ex) {
-				throw new IMUT_ImmutableListException('putAll(List<SObject> sObjectList) is only supported for String, SObject mapping', ex);  
-			}
+		Map<String, SObject> sObjectByStringMap;
+		try {
+			sObjectByStringMap = this.mapHelper.convertToSObjectByStringMap(cloneMap); 
+		}
+		catch (UTIL_MapHelperException ex) {
+			throw new IMUT_ImmutableListException('putAll(List<SObject> sObjectList) is only supported for String, SObject mapping', ex);
 		}
 		return sObjectByStringMap;
 	}
@@ -153,5 +152,4 @@ public class IMUT_ImmutableMap {
     public Map<Object, Object> toMap() {
     	return this.rawClone();
     }
-
 }
