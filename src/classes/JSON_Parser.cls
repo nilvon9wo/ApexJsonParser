@@ -4,7 +4,7 @@ public class JSON_Parser {
     JSON_SYN_SyntacticAnalyzer syntacticAnalyzer;
     
     public JSON_Parser(
-    		JSON_LEX_LexicalAnalyzer lexicalAnalyzer,
+    		JSON_LEX_LexicalAnalyzer lexicalAnalyzer, 
     		JSON_SYN_SyntacticAnalyzer syntacticAnalyzer
     	) {
     	this.lexicalAnalyzer = lexicalAnalyzer;
@@ -17,6 +17,6 @@ public class JSON_Parser {
     
     public IMUT_ImmutableMap parse(String json) {
     	IMUT_ImmutableList tokenList = this.lexicalAnalyzer.findTokens(json);
-    	return this.syntacticAnalyzer.parse(tokenList);
+    	return this.syntacticAnalyzer.findValues(tokenList);
     }
 }
