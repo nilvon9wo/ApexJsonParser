@@ -11,34 +11,17 @@ public class TEST_DummyUserFactory {
 	private static final Map<String, Id> USERROLE_ID_BY_USERROLE_NAME_MAP = createUserRoleIdByUserRoleNameMap(); 
 	private static final Id CEO_USERROLE_ID = USERROLE_ID_BY_USERROLE_NAME_MAP.get(CEO);
 	
-	private static final List<User> STANDARD_TEST_USER_LIST = createStandardTestUserList();
-	public static final User DEFAULT_USER = STANDARD_TEST_USER_LIST[0];
+	public static final User DEFAULT_USER = create(TEST_InsertModeEnum.INSERT_NOW);
 	
-	private static List<User> createStandardTestUserList() {
-		// NOTE: For efficency, order is important here!
-		List<User> templateUserList = new List<User> {
-			new User()
-			// We can NOT include integration user, nor any user with a UserRole here
-			// because of conflicts with ACN_AutomationSettingTestDummyFactory.createForStandardIntegrationTest();  :-(
-			
-			// TODO: Create Standard Contact User
-		}; 
-		return createBundle(templateUserList, TEST_InsertModeEnum.INSERT_NOW, TEST_InsertRelationshipsEnum.INCLUDE).userList;
-	}
-
 	public static final String DEFAULT_FIRST_NAME_PREFIX = 'User First Name ';
 	public static final String DEFAULT_LAST_NAME_PREFIX = 'User Last Name ';
-	public static final String DEFAULT_SCOPE = 'Scope_01';
 
-    public static Bundle createBundle(
+    public static List<User> createList(
     		List<User> templateUserList,  
-    		TEST_InsertModeEnum insertMode,
-    		TEST_InsertRelationshipsEnum insertOptionalRelationships
+    		TEST_InsertModeEnum insertMode
     	) {
     	Integer quantity = templateUserList.size();
-		Bundle bundle = new Bundle(quantity, insertMode, insertOptionalRelationships);
-    		
-        bundle.userList = new List<User>();
+        List<User> userList = new List<User>();
         Integer i = 0;
         for (User templateUser : templateUserList) { 
     		String randomCharacter = getRandomCharacter(); 
@@ -46,7 +29,7 @@ public class TEST_DummyUserFactory {
     		String randomValue = randomCharacter + randomNumber;
         	
 			String defaultEmail = (String) TEST_DefaultHelper.valueOrDefault(templateUser.email, 'test.user.' + randomValue + '@example.com');
-            bundle.userList.add(new User(
+            userList.add(new User(
             	FirstName = (String) TEST_DefaultHelper.valueOrDefault(templateUser.LastName, DEFAULT_FIRST_NAME_PREFIX + ' ' + i),
             	LastName = (String) TEST_DefaultHelper.valueOrDefault(templateUser.LastName, DEFAULT_LAST_NAME_PREFIX + ' ' + i),
             	
@@ -57,98 +40,39 @@ public class TEST_DummyUserFactory {
             	Alias = (String) TEST_DefaultHelper.valueOrDefault(templateUser.Alias, 'testu' + i),
             	
             	ProfileId = (String) TEST_DefaultHelper.valueOrDefault(templateUser.ProfileId, SYSTEM_ADMIN_ID),
-            	
-            	// Creating UserRoleId causes conflicts with ACN_AutomationSettingTestDummyFactory.createForStandardIntegrationTest();
-            	// If UserRoleId is needed, update users in tests BEFORE creating automation settings.  
-            	
+
             	EmailEncodingKey = (String) TEST_DefaultHelper.valueOrDefault(templateUser.EmailEncodingKey, 'ISO-8859-1'),
             	LanguageLocaleKey = (String) TEST_DefaultHelper.valueOrDefault(templateUser.LanguageLocaleKey, 'en_US'),
             	LocaleSidKey = (String) TEST_DefaultHelper.valueOrDefault(templateUser.LocaleSidKey, 'en_GB'),
             	TimeZoneSidKey = (String) TEST_DefaultHelper.valueOrDefault(templateUser.TimeZoneSidKey, 'GMT')
-
-				// FIXME: Only Portal Users can be associated to a contact
-            	// ContactId = (Id) TEST_DefaultHelper.valueOrDefault(templateUser.ContactId, null) 
             ));
             i++; 
         }
 
-		bundle = createRelationships(bundle, insertOptionalRelationships);
-
         if (insertMode == TEST_InsertModeEnum.INSERT_NOW) {
-            insert bundle.userList;
+            insert userList;
         } else if (insertMode == TEST_InsertModeEnum.MOCK_INSERT) {
-            TEST_MockInsertHelper.addIds(bundle.userList);  
+            TEST_MockInsertHelper.addIds(userList);  
         }
         
-        return bundle;
+        return userList;
     }    
-
-    public static Bundle createBundle(
-    		Integer quantity,  
-    		TEST_InsertModeEnum insertMode,
-    		TEST_InsertRelationshipsEnum insertOptionalRelationships
-    	) {
-    	List<User> templateUserList = new List<User>();
-        for (Integer i = 1; i <= quantity; i++) {
-            templateUserList.add(new User());
-        }
-		return createBundle(templateUserList, insertMode, insertOptionalRelationships);
-    }    
-
-    public static Bundle createBundle(Integer quantity, TEST_InsertModeEnum insertMode) {
-    	return createBundle(quantity, insertMode, TEST_InsertRelationshipsEnum.INCLUDE);
-    }
-
-    public static Bundle createBundle(Integer quantity) {
-    	return createBundle(quantity, TEST_InsertModeEnum.MOCK_INSERT, TEST_InsertRelationshipsEnum.INCLUDE);
-    }
-
-    public static Bundle createBundle() {
-    	Integer quantity = 1;
-    	return createBundle(quantity, TEST_InsertModeEnum.MOCK_INSERT, TEST_InsertRelationshipsEnum.INCLUDE);
-    }
-
-	private static Bundle createRelationships(Bundle bundle, TEST_InsertRelationshipsEnum insertOptionalRelationships) {
-		if (insertOptionalRelationships == TEST_InsertRelationshipsEnum.INCLUDE) {
-			for (Integer i = 0; i < bundle.userList.size(); i++) {
-				User user = bundle.userList[i];
-				/* FIXME: Only Portal Users can be associated to a contact
-				if (user.contactId == null && bundle.contactList != null && bundle.contactList[i] != null) {
-					user.contactId = bundle.contactList[i].Id;
-				}
-				*/
-			}
-		}
-		return bundle;
-	}
 
     public static List<User> createList(
     		Integer quantity,  
     		TEST_InsertModeEnum insertMode
     	) {
-    		return createBundle(quantity, insertMode, TEST_InsertRelationshipsEnum.EXCLUDE).userList;
+    	List<User> templateUserList = new List<User>();
+        for (Integer i = 1; i <= quantity; i++) {
+            templateUserList.add(new User());
+        }
+		return createList(templateUserList, insertMode);
     }    
 
     public static List<User> createList(Integer quantity){
     	return createList(quantity, TEST_InsertModeEnum.NEVER_INSERT);
     }
 
-    public static List<User> createList(Integer quantity, List<Contact> contactList, TEST_InsertModeEnum insertMode){
-    	Integer possibleContactValues = contactList.size();
-    	
-    	List<User> templateUserList = new List<User>();
-    	for (Integer i = 0; i < quantity; i++) {
-    		templateUserList.add(new User(
-    			ContactId = contactList[Math.mod(i, possibleContactValues)].id
-    		));
-    	}
-    	return createBundle(templateUserList, insertMode, TEST_InsertRelationshipsEnum.EXCLUDE).userList;
-    }
-
-    public static List<User> createList(Integer quantity, List<Contact> contactList){
-    	return createList(quantity, contactList, TEST_InsertModeEnum.NEVER_INSERT);
-    }
-    
     public static User create(TEST_InsertModeEnum insertMode) {
     	Integer quantity = 1;
     	return createList(quantity, insertMode)[0];
@@ -156,23 +80,6 @@ public class TEST_DummyUserFactory {
 
     public static User create() {
     	return create(TEST_InsertModeEnum.NEVER_INSERT);
-    }
-    
-    public class Bundle {
-		public Bundle(
-			Integer quantity, 
-			TEST_InsertModeEnum insertMode, 
-			TEST_InsertRelationshipsEnum insertOptionalRelationships
-		) {
-			/* FIXME: Only Portal Users can be associated to a contact
-			if (insertOptionalRelationships == TEST_InsertRelationshipsEnum.INCLUDE) {
-				this.contactList = TEST_DummyContactFactory.createList(quantity, insertMode);
-			}
-			*/
-		}
-		
-		public List<Contact> contactList;
-		public List<User> userList;
     }
     
 	// Helpers ----------------------------------------------------------------------------------------------
@@ -207,13 +114,6 @@ public class TEST_DummyUserFactory {
 		return userRoleIdByUserRoleNameMap;
 	}
 
-	// WARNING: This will break many integration tests!!!!	
-	public static User upgradeToIntegrationUser(User user) {
-		user.UserRoleId = CEO_USERROLE_ID;
-		update user;
-		return user;
-	}
-	
 	// Randomizer -----------------------------------------------------------------------------------------------------
 	// This is INTENTIONAL duplicate code from UTIL_Randomizer in order for tests not to rely on code which it might be testing.
 	    
