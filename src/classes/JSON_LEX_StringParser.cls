@@ -1,5 +1,5 @@
 public class JSON_LEX_StringParser implements JSON_LEX_ParserIntf {
-	public JSON_LEX_ParseResult parseFor(String inputString) { 
+	public JSON_LEX_ParseResult parse(String inputString) { 
 		return (this.isQuoted(inputString))
 			? this.findMatchFor(inputString)
 			: new JSON_LEX_ParseResult(inputString);

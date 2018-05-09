@@ -17,21 +17,23 @@ public virtual class JSON_LEX_LexicalAnalyzer {
 	}
 	
     public virtual IMUT_ImmutableList findTokens(String inputString) {
-    	return this.match(inputString).tokenList;
+    	return this.parse(inputString).tokenList;
     } 
     
-	public JSON_LEX_ParseResult match(String inputString) {
+	@testVisible
+	private JSON_LEX_ParseResult parse(String inputString) {
     	JSON_LEX_ParseResult parseResult = new JSON_LEX_ParseResult(inputString);
     	while (parseResult.remainder.isDefined()) {
     		String remainder = ((String) parseResult.remainder.get()).trim();
-    		parseResult = this.match(parseResult, remainder);
+    		parseResult = this.parse(parseResult, remainder);
     	}
     	return parseResult;
 	}
 
-	public JSON_LEX_ParseResult match(JSON_LEX_ParseResult parseResult, String remainder) {
-		for (JSON_LEX_ParserIntf Parser : this.parserList) {
-			JSON_LEX_ParseResult result = Parser.parseFor(remainder);
+	@testVisible
+	private JSON_LEX_ParseResult parse(JSON_LEX_ParseResult parseResult, String remainder) {
+		for (JSON_LEX_ParserIntf parser : this.parserList) {
+			JSON_LEX_ParseResult result = parser.parse(remainder);
 			if (!result.tokenList.isEmpty()) {
 				return new JSON_LEX_ParseResult(
 					parseResult.tokenList.addAll(result.tokenList), 

@@ -14,7 +14,7 @@ public class JSON_LEX_BooleanParser implements JSON_LEX_ParserIntf {
 		FALSE_STRING => false
 	};
 	
-	public JSON_LEX_ParseResult parseFor(String inputString) {
+	public JSON_LEX_ParseResult parse(String inputString) {
 		String remainder = inputString.trim();
 		JSON_LEX_ParseResult parseResult = this.findMatchFor(remainder);
 		

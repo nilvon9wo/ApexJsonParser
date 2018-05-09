@@ -91,7 +91,7 @@ public class IMUT_ImmutableMap {
     	return new IMUT_ImmutableMap(cloneMap);
     } 
 
-    public IMUT_ImmutableMap put(Map<Object, Object> objectMap) {
+    public IMUT_ImmutableMap putAll(Map<Object, Object> objectMap) {
     	Map<Object, Object> cloneMap = this.rawClone();
     	cloneMap.putAll(objectMap);
     	return new IMUT_ImmutableMap(cloneMap);

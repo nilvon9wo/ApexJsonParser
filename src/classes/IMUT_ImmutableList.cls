@@ -131,5 +131,20 @@ public class IMUT_ImmutableList  implements Iterable<Object> {
     
     public Iterator<Object> iterator() { 
     	return toList().iterator();  
+    }
+    
+    public PopResult pop() {
+    	return new PopResult(this);
+    }
+    
+    public class PopResult{
+    	public Object topObject;
+    	public IMUT_ImmutableList reducedList;
+    	
+    	@testVisible
+    	private PopResult(IMUT_ImmutableList thisList) {
+    		this.topObject = thisList.get(0);
+    		this.reducedList = thisList.remove(0);
+    	}
     }   
 }
