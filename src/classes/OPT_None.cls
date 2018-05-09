@@ -20,4 +20,4 @@ public virtual class OPT_None extends OPT_Option {
 	}
 
 	public override String toString() { return 'None'; }  
-}   
+}

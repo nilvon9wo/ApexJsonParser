@@ -1,8 +1,8 @@
-public class JSON_NumberMatcher implements JSON_MatchIntf {
-	public JSON_ParseResult matchFor(String inputString) {
-		return (this.isNumber(inputString))
-			? this.findMatchFor(inputString)
-			: new JSON_ParseResult(inputString);
+public class JSON_LEX_NumberMatcher implements JSON_LEX_MatchIntf {
+	public JSON_LEX_ParseResult matchFor(String inputString) { 
+		return (this.isNumber(inputString)) 
+			? this.findMatchFor(inputString) 
+			: new JSON_LEX_ParseResult(inputString);
 	}
 	
 	@testVisible
@@ -11,7 +11,7 @@ public class JSON_NumberMatcher implements JSON_MatchIntf {
 	}
 	
 	@testVisible
-	private JSON_ParseResult findMatchFor(String inputString) {
+	private JSON_LEX_ParseResult findMatchFor(String inputString) {
 		String token = '';
 		String remainder = inputString;
 		for (Integer i = 0; i < remainder.length(); i++) {
@@ -31,9 +31,9 @@ public class JSON_NumberMatcher implements JSON_MatchIntf {
 				: Integer.valueOf(token);
 		}
 		catch (TypeException ex) {
-			throw new JSON_MatchersException('Bad number: ' + token, ex);
+			throw new JSON_LEX_MatchersException('Bad number: ' + token, ex);
 		}
 		
-		return new JSON_ParseResult(value, remainder.substring(token.length(), remainder.length())); 
+		return new JSON_LEX_ParseResult(value, remainder.substring(token.length(), remainder.length())); 
 	}
 }

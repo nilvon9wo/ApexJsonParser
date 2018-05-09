@@ -1,9 +1,9 @@
-public class JSON_BooleanMatcher implements JSON_MatchIntf {
+public class JSON_LEX_BooleanMatcher implements JSON_LEX_MatchIntf {
 	
 	private static final String TRUE_STRING = 'TRUE';
-	private static final String FALSE_STRING = 'FALSE';
-	private static final JSON_ParseResult NO_MATCH = null;
-	
+	private static final String FALSE_STRING = 'FALSE'; 
+	private static final JSON_LEX_ParseResult NO_MATCH = null; 
+	 
 	private static final Map<String, Integer> LENGTH_BY_STRING_MAP = new Map<String, Integer> {
 		TRUE_STRING => TRUE_STRING.length(),
 		FALSE_STRING => FALSE_STRING.length()
@@ -14,19 +14,19 @@ public class JSON_BooleanMatcher implements JSON_MatchIntf {
 		FALSE_STRING => false
 	};
 	
-	public JSON_ParseResult matchFor(String inputString) {
+	public JSON_LEX_ParseResult matchFor(String inputString) {
 		String remainder = inputString.trim();
-		JSON_ParseResult parseResult = this.findMatchFor(remainder);
+		JSON_LEX_ParseResult parseResult = this.findMatchFor(remainder);
 		
 		return (parseResult != null)
 			? parseResult
-			: new JSON_ParseResult(remainder);
+			: new JSON_LEX_ParseResult(remainder);
 	}
 	
 	@testVisible
-	private JSON_ParseResult findMatchFor(String remainder){
+	private JSON_LEX_ParseResult findMatchFor(String remainder){
 		for (String value : LENGTH_BY_STRING_MAP.keySet()) {
-			JSON_ParseResult parseResult = this.findMatchFor(remainder, value);
+			JSON_LEX_ParseResult parseResult = this.findMatchFor(remainder, value);
 			if (parseResult != null) {
 				return parseResult;
 			}
@@ -36,13 +36,13 @@ public class JSON_BooleanMatcher implements JSON_MatchIntf {
 	}
 	
 	@testVisible
-	private JSON_ParseResult findMatchFor(String remainder, String value){
+	private JSON_LEX_ParseResult findMatchFor(String remainder, String value){
 		Integer booleanLength = LENGTH_BY_STRING_MAP.get(value);
 		
 		if (remainder.length() >= booleanLength) {
 			String start = remainder.substring(0, booleanLength).toUpperCase();
 			if (value.equals(start)) {
-				return new JSON_ParseResult(
+				return new JSON_LEX_ParseResult(
 					BOOLEAN_BY_STRING_MAP.get(value), 
 					remainder.substring(booleanLength, remainder.length())
 				);
