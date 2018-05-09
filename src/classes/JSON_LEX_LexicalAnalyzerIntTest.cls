@@ -26,4 +26,4 @@ public class JSON_LEX_LexicalAnalyzerIntTest {
     	
     	System.assertEquals(expectedTokenList.size(), resultList.size());
     }
-} 
+}

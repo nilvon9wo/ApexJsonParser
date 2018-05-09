@@ -1,5 +1,5 @@
-public class JSON_LEX_NumberMatcher implements JSON_LEX_MatchIntf {
-	public JSON_LEX_ParseResult matchFor(String inputString) { 
+public class JSON_LEX_NumberParser implements JSON_LEX_ParserIntf {
+	public JSON_LEX_ParseResult parseFor(String inputString) { 
 		return (this.isNumber(inputString)) 
 			? this.findMatchFor(inputString) 
 			: new JSON_LEX_ParseResult(inputString);
@@ -31,7 +31,7 @@ public class JSON_LEX_NumberMatcher implements JSON_LEX_MatchIntf {
 				: Integer.valueOf(token);
 		}
 		catch (TypeException ex) {
-			throw new JSON_LEX_MatchersException('Bad number: ' + token, ex);
+			throw new JSON_LEX_ParsersException('Bad number: ' + token, ex);
 		}
 		
 		return new JSON_LEX_ParseResult(value, remainder.substring(token.length(), remainder.length())); 

@@ -1,10 +1,10 @@
-public class JSON_LEX_NullMatcher implements JSON_LEX_MatchIntf { 
+public class JSON_LEX_NullParser implements JSON_LEX_ParserIntf { 
 	
 	private static final String NULL_STRING = 'NULL';
 	private static final Integer NULL_STRING_LENGTH = NULL_STRING.length(); 
 	private static final JSON_LEX_ParseResult NO_MATCH = null; 
 	
-	public JSON_LEX_ParseResult matchFor(String inputString) {
+	public JSON_LEX_ParseResult parseFor(String inputString) {
 		String remainder = inputString.trim();
 		JSON_LEX_ParseResult parseResult = this.findMatchFor(remainder); 
 		

@@ -1,18 +1,18 @@
 // See: http://notes.eatonphil.com/writing-a-simple-json-parser.html
 public virtual class JSON_LEX_LexicalAnalyzer { 
-	List<JSON_LEX_MatchIntf> matcherList; 
+	List<JSON_LEX_ParserIntf> ParserList; 
 	
-	public JSON_LEX_LexicalAnalyzer(List<JSON_LEX_MatchIntf> matcherList) {
-		this.matcherList = matcherList;
+	public JSON_LEX_LexicalAnalyzer(List<JSON_LEX_ParserIntf> ParserList) {
+		this.ParserList = ParserList;
 	}
  
 	public JSON_LEX_LexicalAnalyzer() {
-		this(new List<JSON_LEX_MatchIntf>{
-				new JSON_LEX_StringMatcher(), 
-				new JSON_LEX_NumberMatcher(),
-				new JSON_LEX_BooleanMatcher(),
-				new JSON_LEX_NullMatcher(),
-				new JSON_LEX_SyntaxMatcher()
+		this(new List<JSON_LEX_ParserIntf>{
+				new JSON_LEX_StringParser(), 
+				new JSON_LEX_NumberParser(),
+				new JSON_LEX_BooleanParser(),
+				new JSON_LEX_NullParser(),
+				new JSON_LEX_SyntaxParser()
 		});
 	}
 	
@@ -30,8 +30,8 @@ public virtual class JSON_LEX_LexicalAnalyzer {
 	}
 
 	public JSON_LEX_ParseResult match(JSON_LEX_ParseResult parseResult, String remainder) {
-		for (JSON_LEX_MatchIntf matcher : this.matcherList) {
-			JSON_LEX_ParseResult result = matcher.matchFor(remainder);
+		for (JSON_LEX_ParserIntf Parser : this.ParserList) {
+			JSON_LEX_ParseResult result = Parser.parseFor(remainder);
 			if (!result.tokenList.isEmpty()) {
 				return new JSON_LEX_ParseResult(
 					parseResult.tokenList.addAll(result.tokenList), 

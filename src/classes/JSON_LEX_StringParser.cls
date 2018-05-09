@@ -1,5 +1,5 @@
-public class JSON_LEX_StringMatcher implements JSON_LEX_MatchIntf {
-	public JSON_LEX_ParseResult matchFor(String inputString) { 
+public class JSON_LEX_StringParser implements JSON_LEX_ParserIntf {
+	public JSON_LEX_ParseResult parseFor(String inputString) { 
 		return (this.isQuoted(inputString))
 			? this.findMatchFor(inputString)
 			: new JSON_LEX_ParseResult(inputString);
@@ -24,6 +24,6 @@ public class JSON_LEX_StringMatcher implements JSON_LEX_MatchIntf {
 			}
 		}
 		
-		throw new JSON_LEX_MatchersException('Expected end-of-string quote');
+		throw new JSON_LEX_ParsersException('Expected end-of-string quote');
 	}
 }

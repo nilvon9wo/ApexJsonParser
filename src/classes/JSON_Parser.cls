@@ -1,18 +1,18 @@
 // See: http://notes.eatonphil.com/writing-a-simple-json-parser.html
 public class JSON_Parser {
-    JSON_LexicalAnalyzer lexicalAnalyzer;
-    JSON_SyntacticAnalyzer syntacticAnalyzer;
+    JSON_LEX_LexicalAnalyzer lexicalAnalyzer;
+    JSON_SYN_SyntacticAnalyzer syntacticAnalyzer;
     
     public JSON_Parser(
-    		JSON_LexicalAnalyzer lexicalAnalyzer,
-    		JSON_SyntacticAnalyzer syntacticAnalyzer
+    		JSON_LEX_LexicalAnalyzer lexicalAnalyzer,
+    		JSON_SYN_SyntacticAnalyzer syntacticAnalyzer
     	) {
     	this.lexicalAnalyzer = lexicalAnalyzer;
     	this.syntacticAnalyzer = syntacticAnalyzer;
     }
     
     public JSON_Parser() {
-    	this(new JSON_LexicalAnalyzer(), new JSON_SyntacticAnalyzer());
+    	this(new JSON_LEX_LexicalAnalyzer(), new JSON_SYN_SyntacticAnalyzer());
     }
     
     public IMUT_ImmutableMap parse(String json) {
