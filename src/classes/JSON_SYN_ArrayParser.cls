@@ -1,22 +1,26 @@
 public class JSON_SYN_ArrayParser implements JSON_SYN_ParserIntf {
-	JSON_SYN_SyntacticAnalyzer syntacticAnalyzer;
+	JSON_SYN_PrimativeParser primativeParser;
+	JSON_SYN_SyntacticAnalyzer syntacticAnalyzer; 
 	
-	public JSON_SYN_ArrayParser(JSON_SYN_SyntacticAnalyzer syntacticAnalyzer) {
+	public JSON_SYN_ArrayParser(JSON_SYN_PrimativeParser primativeParser, JSON_SYN_SyntacticAnalyzer syntacticAnalyzer) {
+		this.primativeParser = primativeParser;
 		this.syntacticAnalyzer = syntacticAnalyzer;
 	}
 
-	public JSON_SYN_ArrayParser() {
-		this(new JSON_SYN_SyntacticAnalyzer());
+	public JSON_SYN_ArrayParser() { 
+		this(new JSON_SYN_PrimativeParser(), new JSON_SYN_SyntacticAnalyzer());
 	}
 	
-    public JSON_SYN_ParseValueResult parse(IMUT_ImmutableList tokenList) {
+    public JSON_SYN_ParseResultArray parse(IMUT_ImmutableList tokenList) {
 		return (this.isBracketed(tokenList))
-			? this.findMatchFor(tokenList)
-			: new JSON_SYN_ParseValueResult(tokenList);
-	}
+			? this.findMatchFor(tokenList.remove(0))
+			: new JSON_SYN_ParseResultArray(tokenList);
+    }
+
+	private static final String UNEXPECTED_END_OF_TOKEN_LIST = 'Expected end-of-array bracket.';
 	  
 	@testVisible
-	private Boolean isBracketed (IMUT_ImmutableList tokenList){
+	private Boolean isBracketed (IMUT_ImmutableList tokenList){ 
 		String token;
 		try {
 			token = (String) tokenList.get(0);
@@ -27,46 +31,52 @@ public class JSON_SYN_ArrayParser implements JSON_SYN_ParserIntf {
 		
 		return JSON_Characters.LEFTBRACKET.equals(token);
 	}
-	
-	@testVisible
-	private JSON_SYN_ParseValueResult findMatchFor(IMUT_ImmutableList tokenList) {
-		List<Object> objectList = new List<Object>();
- 
-		IMUT_ImmutableList.PopResult emptyCheckPopResult = tokenList.pop(); 
-		if (isArrayFinished(emptyCheckPopResult)) {
-			return new JSON_SYN_ParseValueResult(objectList, emptyCheckPopResult.reducedList); 
+	  
+	@testVisible  
+	private JSON_SYN_ParseResultArray findMatchFor(IMUT_ImmutableList tokenList) {
+		JSON_SYN_ParseResultPrimative firstResult = primativeParser.parse(tokenList);
+		IMUT_ImmutableList remainingList = firstResult.getRemainder();
+		if (this.isArrayFinished(firstResult)) {
+			return new JSON_SYN_ParseResultArray(remainingList);   
 		}
+  
+ 		JSON_SYN_ParseResultArray accumulatedResultArray = new JSON_SYN_ParseResultArray(remainingList);  
+		while(!accumulatedResultArray.getRemainder().isEmpty()) {
+			accumulatedResultArray = this.parse(accumulatedResultArray); 
+			if (accumulatedResultArray.isFinished()) {
+				return accumulatedResultArray;
+			}
+		}
+		
+		throw new JSON_SYN_ParserException (UNEXPECTED_END_OF_TOKEN_LIST);
+	} 
+	
 
-		IMUT_ImmutableList remainingList = tokenList.remove(0);
-		while(!remainingList.isEmpty()) {
-			JSON_SYN_ParseValueResult result = parseArray(remainingList);
-			objectList.add(result.value);
-			remainingList = result.remainder;
+	@testVisible
+	private JSON_SYN_ParseResultArray parse(JSON_SYN_ParseResultArray accumulatedResultArray) {
+		JSON_SYN_ParseResultIntf valueResult = syntacticAnalyzer.parse(accumulatedResultArray.getRemainder());
+		IMUT_ImmutableList valueList = accumulatedResultArray.getIncompleteList().add(valueResult.getValue());
+		
+		IMUT_ImmutableList remainingList = valueResult.getRemainder();
+		if (!remainingList.isEmpty()) {
+			JSON_SYN_ParseResultPrimative syntaxResult = primativeParser.parse(remainingList);
+			IMUT_ImmutableList postSyntaxList = syntaxResult.getRemainder();
+			
+			if (this.isArrayFinished(syntaxResult)) {
+				return new JSON_SYN_ParseResultArray(valueList, postSyntaxList, JSON_SYN_ParseResultArray.IS_FINISHED);
+			}
+			else if (!JSON_Characters.COMMA.equals(syntaxResult.getValue())) {
+				throw new JSON_SYN_ParserException ('Expected comma after object in array; found: ' + syntaxResult.getValue());
+			}
+			return new JSON_SYN_ParseResultArray(valueList, postSyntaxList, JSON_SYN_ParseResultArray.NOT_FINISHED);
 		}
 		
-		throw new JSON_LEX_ParsersException ('Expected end-of-array bracket');
+		throw new JSON_SYN_ParserException (UNEXPECTED_END_OF_TOKEN_LIST); 
 	}
+
 	
 	@testVisible
-	private JSON_SYN_ParseValueResult parseArray(IMUT_ImmutableList remainingList) {
-		List<Object> objectList = new List<Object>();
-		JSON_SYN_ParseKeyedResult content = this.syntacticAnalyzer.parse(remainingList);
-		objectList.add(content.valueMap);
-		remainingList = content.remainder; 
-		
-		IMUT_ImmutableList.PopResult syntaxPopResult = remainingList.pop();
-		if (isArrayFinished(syntaxPopResult)) {
-			return new JSON_SYN_ParseValueResult(objectList, syntaxPopResult.reducedList); 
-		}
-		else if (!JSON_Characters.COMMA.equals(syntaxPopResult.topObject)) {
-			throw new JSON_LEX_ParsersException ('Expected comma after object in array; found: ' + syntaxPopResult.topObject);
-		}
-		
-		return new JSON_SYN_ParseValueResult(objectList, syntaxPopResult.reducedList);
+	private Boolean isArrayFinished(JSON_SYN_ParseResultPrimative syntaxResult) {
+		return JSON_Characters.RIGHTBRACKET.equals(syntaxResult.getValue());
 	}
-	
-	@testVisible
-	private Boolean isArrayFinished(IMUT_ImmutableList.PopResult popResult) {
-		return JSON_Characters.RIGHTBRACKET.equals(popResult.topObject);
-	}     
 }

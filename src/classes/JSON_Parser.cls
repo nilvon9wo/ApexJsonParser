@@ -9,14 +9,14 @@ public class JSON_Parser {
     	) {
     	this.lexicalAnalyzer = lexicalAnalyzer;
     	this.syntacticAnalyzer = syntacticAnalyzer;
-    }
+    } 
     
     public JSON_Parser() {
     	this(new JSON_LEX_LexicalAnalyzer(), new JSON_SYN_SyntacticAnalyzer());
     }
     
-    public IMUT_ImmutableMap parse(String json) {
+    public OPT_Option parse(String json) {
     	IMUT_ImmutableList tokenList = this.lexicalAnalyzer.findTokens(json);
-    	return this.syntacticAnalyzer.findValues(tokenList);
+    	return this.syntacticAnalyzer.findValue(tokenList);
     }
 }

@@ -19,6 +19,10 @@ public class IMUT_ImmutableMap {
     	this(seedMap, new UTIL_MapConverter());
     }
 
+    public IMUT_ImmutableMap() {
+    	this(new Map<Object, Object>());
+    }
+
     public IMUT_ImmutableMap perfectClone() {
     	return new IMUT_ImmutableMap(this.rawClone());
     }

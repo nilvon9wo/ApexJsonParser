@@ -31,7 +31,7 @@ public class JSON_LEX_NumberParser implements JSON_LEX_ParserIntf {
 				: Integer.valueOf(token);
 		}
 		catch (TypeException ex) {
-			throw new JSON_LEX_ParsersException('Bad number: ' + token, ex);
+			throw new JSON_LEX_ParserException('Bad number: ' + token, ex);
 		}
 		
 		return new JSON_LEX_ParseResult(value, remainder.substring(token.length(), remainder.length())); 

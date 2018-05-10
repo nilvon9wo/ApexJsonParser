@@ -24,6 +24,6 @@ public class JSON_LEX_StringParser implements JSON_LEX_ParserIntf {
 			}
 		}
 		
-		throw new JSON_LEX_ParsersException('Expected end-of-string quote');
+		throw new JSON_LEX_ParserException('Expected end-of-string quote');
 	}
 }
