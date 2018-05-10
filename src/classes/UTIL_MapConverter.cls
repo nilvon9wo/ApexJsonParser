@@ -1,4 +1,4 @@
-public virtual class UTIL_MapHelper {
+public virtual class UTIL_MapConverter {
 
     public Map<Object, Object> convertToObjectByObjectMap (Map<String, Object> mapByString) {
     	Map<Object, Object> mapByObject = new Map<Object, Object>();
@@ -36,7 +36,7 @@ public virtual class UTIL_MapHelper {
     		return (String) value;
 		}
 		catch (TypeException ex) {
-			throw new UTIL_MapHelperException('Value ' + value + ' is not a String', ex); 
+			throw new UTIL_MapConverterException('Value ' + value + ' is not a String', ex); 
 		}
     }
     
@@ -47,7 +47,7 @@ public virtual class UTIL_MapHelper {
     		return (SObject) value;
 		}
 		catch (TypeException ex) {
-			throw new UTIL_MapHelperException('Value ' + value + ' is not an SObject', ex); 
+			throw new UTIL_MapConverterException('Value ' + value + ' is not an SObject', ex); 
 		}
     }
 }

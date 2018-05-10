@@ -4,18 +4,18 @@ public class JSON_SYN_ParseKeyedResult {
     
     public JSON_SYN_ParseKeyedResult(IMUT_ImmutableMap valueMap, IMUT_ImmutableList remainder) {
     	this.valueMap = valueMap; 
-    	this.remainder = remainder; 
+    	this.remainder = remainder;  
     }   
 
-    public JSON_SYN_ParseKeyedResult(Map<String, Object> mapValueByToken, IMUT_ImmutableList remainder, UTIL_MapHelper mapHelper) {
+    public JSON_SYN_ParseKeyedResult(Map<String, Object> mapValueByToken, IMUT_ImmutableList remainder, UTIL_MapConverter mapConverter) {
     	this(
-    		new IMUT_ImmutableMap(mapHelper.convertToObjectByObjectMap(mapValueByToken)), 
+    		new IMUT_ImmutableMap(mapConverter.convertToObjectByObjectMap(mapValueByToken)), 
     		remainder
     	);
     }   
     
     public JSON_SYN_ParseKeyedResult(Map<String, Object> mapValueByToken, IMUT_ImmutableList remainder) {
-    	this(mapValueByToken, remainder, new UTIL_MapHelper());
+    	this(mapValueByToken, remainder, new UTIL_MapConverter());
     }   
 
     public JSON_SYN_ParseKeyedResult(IMUT_ImmutableList remainder) {

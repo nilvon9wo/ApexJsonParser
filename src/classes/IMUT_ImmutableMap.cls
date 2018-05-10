@@ -1,22 +1,22 @@
 public class IMUT_ImmutableMap {
     Map<Object, Object> seedMap;
-	UTIL_MapHelper mapHelper;
+	UTIL_MapConverter mapConverter;
 
-    public IMUT_ImmutableMap(Map<Object, Object> seedMap, UTIL_MapHelper mapHelper) {
+    public IMUT_ImmutableMap(Map<Object, Object> seedMap, UTIL_MapConverter mapConverter) {
     	this.seedMap = seedMap;
-    	this.mapHelper = mapHelper;
+    	this.mapConverter = mapConverter;
     }
 
-    public IMUT_ImmutableMap(Map<String, SObject> seedMap, UTIL_MapHelper mapHelper) {
-    	this(mapHelper.convertToObjectByObjectMap(seedMap), mapHelper);
+    public IMUT_ImmutableMap(Map<String, SObject> seedMap, UTIL_MapConverter mapConverter) {
+    	this(mapConverter.convertToObjectByObjectMap(seedMap), mapConverter);
     }
     
     public IMUT_ImmutableMap(Map<Object, Object> seedMap) {
-    	this(seedMap, new UTIL_MapHelper());
+    	this(seedMap, new UTIL_MapConverter());
     }
 
     public IMUT_ImmutableMap(Map<String, SObject> seedMap) {
-    	this(seedMap, new UTIL_MapHelper());
+    	this(seedMap, new UTIL_MapConverter());
     }
 
     public IMUT_ImmutableMap perfectClone() {
@@ -121,13 +121,13 @@ public class IMUT_ImmutableMap {
     	Map<Object, Object> cloneMap = this.rawClone();
 		Map<String, SObject> sObjectByStringMap;
 		try {
-			sObjectByStringMap = this.mapHelper.convertToSObjectByStringMap(cloneMap); 
+			sObjectByStringMap = this.mapConverter.convertToSObjectByStringMap(cloneMap); 
 		}
-		catch (UTIL_MapHelperException ex) {
+		catch (UTIL_MapConverterException ex) {
 			throw new IMUT_ImmutableListException('putAll(List<SObject> sObjectList) is only supported for String, SObject mapping', ex);
 		}
-		return sObjectByStringMap;
-	}
+		return sObjectByStringMap; 
+	} 
 
     public IMUT_ImmutableMap remove(Object value) {
     	Map<Object, Object> cloneMap = this.rawClone();
