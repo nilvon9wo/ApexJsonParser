@@ -24,14 +24,17 @@ public virtual class JSON_SYN_SyntacticAnalyzer {
 	// --------------------------------------------------------------------------------
 
 	
-    public virtual JSON_SYN_ParseResultIntf findValue(IMUT_ImmutableList tokenList) {
-	    return this.parse(tokenList); 
+    public virtual Object findValue(IMUT_ImmutableList tokenList) {
+	    return this.parse(tokenList).getValue(); 
     }
 
     public virtual JSON_SYN_ParseResultIntf parse(IMUT_ImmutableList tokenList) {
     	JSON_SYN_ParseResultIntf parseResult = new JSON_SYN_ParseResultObject(tokenList);
     	while (!parseResult.getRemainder().isEmpty()) {
     		parseResult = this.parse(parseResult.getRemainder(), parseResult);
+    		if (parseResult.isDefined()) {
+    			return parseResult;
+    		}
     	}
     	return parseResult;
     }

@@ -62,7 +62,8 @@ public class JSON_SYN_ObjectParser implements JSON_SYN_ParserIntf {
 		return this.createResult(accumulatedResultObject, valueMap, postValueList);
 	}
 	
-	@testVisible IMUT_ImmutableList.ShiftResult findKey(IMUT_ImmutableList tokenList){
+	@testVisible 
+	private IMUT_ImmutableList.ShiftResult findKey(IMUT_ImmutableList tokenList){
     	IMUT_ImmutableList.ShiftResult shiftResult = tokenList.shift(); 
     	Object value = shiftResult.getValue();
     	if (!(value instanceof String)) {
@@ -71,7 +72,8 @@ public class JSON_SYN_ObjectParser implements JSON_SYN_ParserIntf {
 		return shiftResult;
 	} 
 	
-	@testVisible JSON_SYN_ParseResultIntf findValue(IMUT_ImmutableList.ShiftResult keyResult) {
+	@testVisible 
+	private JSON_SYN_ParseResultIntf findValue(IMUT_ImmutableList.ShiftResult keyResult) {
 		IMUT_ImmutableList postKeyList = (IMUT_ImmutableList) keyResult.getRemainder();
 		
 		if (postKeyList.isEmpty()) {

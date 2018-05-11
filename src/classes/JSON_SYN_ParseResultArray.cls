@@ -39,6 +39,6 @@ public class JSON_SYN_ParseResultArray implements JSON_SYN_ParseResultIntf{
     }
 
     public Boolean isFinished() {
-    	return this.isFinished();
+    	return this.isFinished;
     }
 }

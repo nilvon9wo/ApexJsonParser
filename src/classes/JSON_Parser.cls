@@ -15,7 +15,7 @@ public class JSON_Parser {
     	this(JSON_LEX_LexicalAnalyzer.getInstance(), JSON_SYN_SyntacticAnalyzer.getInstance());
     }
     
-    public JSON_SYN_ParseResultIntf parse(String json) {
+    public Object parse(String json) {
     	IMUT_ImmutableList tokenList = this.lexicalAnalyzer.findTokens(json);
     	return this.syntacticAnalyzer.findValue(tokenList);
     }

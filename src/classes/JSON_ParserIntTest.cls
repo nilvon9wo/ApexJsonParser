@@ -5,12 +5,10 @@ public class JSON_ParserIntTest {
 	
     @isTest public static void findTokensShouldReturnExpectedListOfTokens() {
     	// Arrange
-    	//String testInput = '{"foo": [1, 2, {"bar": 2}]}';
-    	String testInput = '{"foo" : 1}';
-    	//String testInput = '1';
+    	String testInput = '{"foo": [1, 2, {"bar": 2}]}';
     	
     	// Act
-    	JSON_SYN_ParseResultIntf result;
+    	Object result;
     	Test.startTest(); 
     	System.runAs(TEST_USER) {
     		result = PARSER_UNDER_TEST.parse(testInput); 
@@ -18,21 +16,12 @@ public class JSON_ParserIntTest {
     	Test.stopTest();	
     	
     	// Assert
-    	System.debug('########## result: ' + result);
-    	/*
-    	Map<String, Object> expectedMap = new Map<String, Object>{
-    		'foo' => new List<Object>{
-	    				1, 
-    					2, 
-    					new Map<String, Object>{ 'bar' => 2}
-		    		} 
-    	};  
+    	IMUT_ImmutableMap resultMap = (IMUT_ImmutableMap) result;
+    	IMUT_ImmutableList resultList = (IMUT_ImmutableList) resultMap.get('foo');
+    	System.assertEquals(1, (Decimal) ((OPT_Some)resultList.get(0)).get());
+    	System.assertEquals(2, (Decimal) ((OPT_Some)resultList.get(1)).get());
     	
-    	for (String key : expectedMap.keySet()) {
-	    	System.assertEquals(expectedMap.get(key), resultMap.get(key));
-    	}
-
-    	System.assertEquals(expectedMap.size(), resultMap.size());
-    	*/
-    }
+    	IMUT_ImmutableMap innerResultMap = (IMUT_ImmutableMap) resultList.get(2);
+    	System.assertEquals(2, (Decimal) ((OPT_Some)innerResultMap.get('bar')).get());
+   }
 }
