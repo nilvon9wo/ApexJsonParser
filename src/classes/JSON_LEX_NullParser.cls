@@ -1,4 +1,14 @@
 public class JSON_LEX_NullParser implements JSON_LEX_ParserIntf { 
+	// Singleton
+	@testVisible private static JSON_LEX_NullParser instance;
+	public static JSON_LEX_NullParser getInstance() {
+		if (instance == null) {
+			instance = new JSON_LEX_NullParser();		
+		}
+		return instance;
+	}
+	
+	// --------------------------------------------------------------------------------	 
 	
 	private static final String NULL_STRING = 'NULL';
 	private static final Integer NULL_STRING_LENGTH = NULL_STRING.length(); 

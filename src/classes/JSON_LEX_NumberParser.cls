@@ -1,4 +1,15 @@
 public class JSON_LEX_NumberParser implements JSON_LEX_ParserIntf {
+	// Singleton
+	@testVisible private static JSON_LEX_NumberParser instance;
+	public static JSON_LEX_NumberParser getInstance() {
+		if (instance == null) {
+			instance = new JSON_LEX_NumberParser();		
+		}
+		return instance;
+	}
+	
+	// --------------------------------------------------------------------------------	 
+
 	public JSON_LEX_ParseResult parse(String inputString) { 
 		return (this.isNumber(inputString)) 
 			? this.findMatchFor(inputString) 

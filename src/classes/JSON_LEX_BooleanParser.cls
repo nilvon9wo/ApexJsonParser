@@ -1,4 +1,14 @@
 public class JSON_LEX_BooleanParser implements JSON_LEX_ParserIntf {
+	// Singleton
+	@testVisible private static JSON_LEX_BooleanParser instance;
+	public static JSON_LEX_BooleanParser getInstance() {
+		if (instance == null) {
+			instance = new JSON_LEX_BooleanParser();		
+		}
+		return instance;
+	}
+	
+	// --------------------------------------------------------------------------------	 
 	
 	private static final String TRUE_STRING = 'TRUE';
 	private static final String FALSE_STRING = 'FALSE'; 

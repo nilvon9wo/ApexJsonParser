@@ -11,11 +11,11 @@ public class JSON_Parser {
     	this.syntacticAnalyzer = syntacticAnalyzer;
     } 
     
-    public JSON_Parser() {
-    	this(new JSON_LEX_LexicalAnalyzer(), new JSON_SYN_SyntacticAnalyzer());
+    public JSON_Parser() { 
+    	this(JSON_LEX_LexicalAnalyzer.getInstance(), JSON_SYN_SyntacticAnalyzer.getInstance());
     }
     
-    public OPT_Option parse(String json) {
+    public JSON_SYN_ParseResultIntf parse(String json) {
     	IMUT_ImmutableList tokenList = this.lexicalAnalyzer.findTokens(json);
     	return this.syntacticAnalyzer.findValue(tokenList);
     }

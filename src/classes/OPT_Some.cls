@@ -38,8 +38,7 @@ public virtual class OPT_Some extends OPT_Option {
         };
     }
  
-
     public override String toString() {
-        return String.format('Some({0})', new List<String>{this.get().toString()});
+        return 'Some(' + this.value + ')';
     }
 }

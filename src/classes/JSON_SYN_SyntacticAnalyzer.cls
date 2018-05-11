@@ -1,21 +1,31 @@
 // See: http://notes.eatonphil.com/writing-a-simple-json-parser.html
 public virtual class JSON_SYN_SyntacticAnalyzer {
-	List<JSON_SYN_ParserIntf> parserList; 
 	
-	public JSON_SYN_SyntacticAnalyzer(List<JSON_SYN_ParserIntf> parserList) {
-		this.parserList = parserList;
-	} 
+	// We can't inject these because the codependcy with JSON_SYN_SyntacticAnalyzer either  
+	// results in the parser list being unpopulated at parse time; or or it
+	// results in an infinite loop. 
+	
+	@testVisible
+	private static final List<JSON_SYN_ParserIntf> DEFAULT_PARSER_LIST = new List<JSON_SYN_ParserIntf>{
+			JSON_SYN_ArrayParser.getInstance(), 
+			JSON_SYN_ObjectParser.getInstance(),
+			JSON_SYN_PrimativeParser.getInstance()
+	};
 	 
-	public JSON_SYN_SyntacticAnalyzer() {
-		this(new List<JSON_SYN_ParserIntf>{
-				new JSON_SYN_ArrayParser(), 
-				new JSON_SYN_ObjectParser(),
-				new JSON_SYN_PrimativeParser()
-		});
+	// Singleton
+	@testVisible private static JSON_SYN_SyntacticAnalyzer instance;
+	public static JSON_SYN_SyntacticAnalyzer getInstance() {
+		if (instance == null) {
+			instance = new JSON_SYN_SyntacticAnalyzer();		
+		}
+		return instance;
 	}
-	 
-    public virtual OPT_Option findValue(IMUT_ImmutableList tokenList) {
-    	return OPT_Option.option(this.parse(tokenList).getValue()); 
+	
+	// --------------------------------------------------------------------------------
+
+	
+    public virtual JSON_SYN_ParseResultIntf findValue(IMUT_ImmutableList tokenList) {
+	    return this.parse(tokenList); 
     }
 
     public virtual JSON_SYN_ParseResultIntf parse(IMUT_ImmutableList tokenList) {
@@ -28,7 +38,7 @@ public virtual class JSON_SYN_SyntacticAnalyzer {
  
     @testVisible  
 	private virtual JSON_SYN_ParseResultIntf parse (IMUT_ImmutableList tokenList, JSON_SYN_ParseResultIntf parseResult) {
-		for (JSON_SYN_ParserIntf parser : this.parserList) {
+		for (JSON_SYN_ParserIntf parser : DEFAULT_PARSER_LIST) {
 			JSON_SYN_ParseResultIntf result = parser.parse(tokenList);
 			if (result.isDefined()) {
 				return result;

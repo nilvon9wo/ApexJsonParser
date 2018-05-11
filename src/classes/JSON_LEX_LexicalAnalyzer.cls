@@ -1,18 +1,30 @@
 // See: http://notes.eatonphil.com/writing-a-simple-json-parser.html
-public virtual class JSON_LEX_LexicalAnalyzer { 
+public virtual class JSON_LEX_LexicalAnalyzer {
+	// Singleton
+	@testVisible private static JSON_LEX_LexicalAnalyzer instance;
+	public static JSON_LEX_LexicalAnalyzer getInstance() {
+		if (instance == null) {
+			instance = new JSON_LEX_LexicalAnalyzer();		
+		}
+		return instance;
+	}
+	
+	// --------------------------------------------------------------------------------	 
 	List<JSON_LEX_ParserIntf> parserList; 
 	
-	public JSON_LEX_LexicalAnalyzer(List<JSON_LEX_ParserIntf> parserList) {
+	@testVisible
+	private JSON_LEX_LexicalAnalyzer(List<JSON_LEX_ParserIntf> parserList) {
 		this.parserList = parserList;
 	}
  
-	public JSON_LEX_LexicalAnalyzer() {
+ 	@testVisible
+	private JSON_LEX_LexicalAnalyzer() {
 		this(new List<JSON_LEX_ParserIntf>{
-				new JSON_LEX_StringParser(), 
-				new JSON_LEX_NumberParser(),
-				new JSON_LEX_BooleanParser(),
-				new JSON_LEX_NullParser(),
-				new JSON_LEX_SyntaxParser()
+				JSON_LEX_StringParser.getInstance(), 
+				JSON_LEX_NumberParser.getInstance(),
+				JSON_LEX_BooleanParser.getInstance(),
+				JSON_LEX_NullParser.getInstance(),
+				JSON_LEX_SyntaxParser.getInstance()
 		});
 	}
 	
